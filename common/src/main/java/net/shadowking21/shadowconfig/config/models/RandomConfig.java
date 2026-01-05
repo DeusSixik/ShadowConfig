@@ -1,19 +1,27 @@
 package net.shadowking21.shadowconfig.config.models;
 
-import com.fasterxml.jackson.annotation.JacksonAnnotation;
-import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import net.shadowking21.shadowconfig.annotation.ConfigComment;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RandomConfig
 {
-    @JsonPropertyDescription("Just a random commentary for random value")
+    @ConfigComment("Just a random commentary for random value And... next string of comment")
     public String randomValue = "random";
 
-    @JsonPropertyDescription("Just a random commentary for random value TWO")
+    @ConfigComment("Just a random commentary for random value TWO")
     public String randomValueTwo = "randomTwo";
 
-    public RandomConfig()
-    {
+    public List<Integer> randomIntValues = new ArrayList<>(List.of(5, 4, 2, 3, 1));
 
-    }
+    public Map<String, Double> randomMapValues = new HashMap<>(Map.of("value1", 1.111, "value2", 2.222));
 
+    public boolean trueValue = true;
+
+    public boolean falseValue = false;
+
+    public RandomConfig() {}
 }

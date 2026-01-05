@@ -2,14 +2,16 @@ package net.shadowking21.shadowconfig;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.toml.TomlFactory;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import net.shadowking21.shadowconfig.config.ConfigSide;
 import net.shadowking21.shadowconfig.config.exstensions.json.example.SCJsonTestConfig;
-import net.shadowking21.shadowconfig.config.exstensions.jsonc.SCJsoncConfig;
 import net.shadowking21.shadowconfig.config.exstensions.jsonc.example.SCJsoncTestConfig;
+import net.shadowking21.shadowconfig.config.exstensions.toml.example.SCTomlTestConfig;
+import net.shadowking21.shadowconfig.config.exstensions.yaml.example.SCYamlTestConfig;
 
 import java.nio.file.Path;
 import java.util.logging.Logger;
@@ -29,6 +31,8 @@ public final class ShadowConfig {
         currentSide = side;
         SCJsonTestConfig.init();
         SCJsoncTestConfig.init();
+        SCTomlTestConfig.init();
+        SCYamlTestConfig.init();
     }
 
     public static Path getDefaultConfigPath() {
@@ -46,6 +50,16 @@ public final class ShadowConfig {
         return new ObjectMapper(factory)
                 .enable(SerializationFeature.INDENT_OUTPUT)
                 .enable(JsonGenerator.Feature.IGNORE_UNKNOWN);
+    }
+
+    public static ObjectMapper getDefaultYamlMapper()
+    {
+        return new ObjectMapper(new YAMLFactory());
+    }
+
+    public static ObjectMapper getDefaultTomlMapper()
+    {
+        return new ObjectMapper(new TomlFactory());
     }
 
     public static ConfigSide getCurrentGameSide() {

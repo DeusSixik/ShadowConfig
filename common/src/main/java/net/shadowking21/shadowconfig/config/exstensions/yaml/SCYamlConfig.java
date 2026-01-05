@@ -1,4 +1,4 @@
-package net.shadowking21.shadowconfig.config.exstensions.jsonc;
+package net.shadowking21.shadowconfig.config.exstensions.yaml;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.shadowking21.shadowconfig.ShadowConfig;
@@ -12,23 +12,22 @@ import net.shadowking21.shadowconfig.config.builder.stages.OptionalStage;
 
 import java.nio.file.Path;
 
-public class SCJsoncConfig<T> extends BaseShadowConfig<T> {
-
-    public SCJsoncConfig(String modId, Path path, T defaults, Class<T> clazz, ConfigSide configSide, ObjectMapper mapper) {
+public class SCYamlConfig<T> extends BaseShadowConfig<T> {
+    public SCYamlConfig(String modId, Path path, T defaults, Class<T> clazz, ConfigSide configSide, ObjectMapper mapper) {
         super(modId, path, defaults, clazz, configSide, mapper);
     }
 
-    public SCJsoncConfig(String modId, T defaults, Class<T> clazz, ConfigSide configSide, ObjectMapper mapper) {
+    public SCYamlConfig(String modId, T defaults, Class<T> clazz, ConfigSide configSide, ObjectMapper mapper) {
         super(modId, defaults, clazz, configSide, mapper);
     }
 
-    public SCJsoncConfig(String modId, T defaults, Class<T> clazz, ConfigSide configSide) {
-        super(modId, defaults, clazz, configSide, ShadowConfig.getDefaultJsoncMapper());
+    public SCYamlConfig(String modId, T defaults, Class<T> clazz, ConfigSide configSide) {
+        super(modId, defaults, clazz, configSide, ShadowConfig.getDefaultYamlMapper());
     }
 
     @Override
     protected String getExtension() {
-        return ".jsonc";
+        return ".yaml";
     }
 
     @Override
@@ -38,7 +37,7 @@ public class SCJsoncConfig<T> extends BaseShadowConfig<T> {
 
     @Override
     public String getCommentPrefix() {
-        return "//";
+        return "#";
     }
 
     public static class Builder<T> extends BaseConfigBuilder<T> implements ModIdStage<T>, ClazzStage<T>, DefaultsStage<T>, OptionalStage<T>
@@ -46,7 +45,7 @@ public class SCJsoncConfig<T> extends BaseShadowConfig<T> {
         private Builder() {}
 
         public static <T> ModIdStage<T> builder(Class<T> clazz, T defaults) {
-            var builder = new SCJsoncConfig.Builder<T>();
+            var builder = new SCYamlConfig.Builder<T>();
             builder.setDefaults(defaults);
             builder.setClass(clazz);
             return builder;
@@ -54,17 +53,17 @@ public class SCJsoncConfig<T> extends BaseShadowConfig<T> {
 
         public static <T> DefaultsStage<T> builder(Class<T> clazz)
         {
-            var builder = new SCJsoncConfig.Builder<T>();
+            var builder = new SCYamlConfig.Builder<T>();
             builder.setClass(clazz);
             return builder;
         }
 
         public static <T> ModIdStage<T> builder() {
-            return new SCJsoncConfig.Builder<T>();
+            return new SCYamlConfig.Builder<T>();
         }
 
         public static <T> ModIdStage<T> builder(T defaults) {
-            var builder = new SCJsoncConfig.Builder<T>();
+            var builder = new SCYamlConfig.Builder<T>();
             builder.setDefaults(defaults);
             return builder;
         }
@@ -101,7 +100,7 @@ public class SCJsoncConfig<T> extends BaseShadowConfig<T> {
 
         @Override
         public BaseShadowConfig<T> build() {
-            var config = new SCJsoncConfig<>(modId, path, defaults, clazz, side, mapper);
+            var config = new SCYamlConfig<>(modId, path, defaults, clazz, side, mapper);
             config.init();
             return config;
         }
@@ -114,7 +113,7 @@ public class SCJsoncConfig<T> extends BaseShadowConfig<T> {
 
         @Override
         protected ObjectMapper getDefaultMapper() {
-            return ShadowConfig.getDefaultJsoncMapper();
+            return ShadowConfig.getDefaultYamlMapper();
         }
     }
 }

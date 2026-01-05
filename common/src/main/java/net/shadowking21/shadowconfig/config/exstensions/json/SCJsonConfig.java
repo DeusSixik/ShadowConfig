@@ -31,6 +31,16 @@ public class SCJsonConfig<T> extends BaseShadowConfig<T> {
         return ".json";
     }
 
+    @Override
+    public boolean isCommentsAllowed() {
+        return false;
+    }
+
+    @Override
+    public String getCommentPrefix() {
+        return "//";
+    }
+
     public static class Builder<T> extends BaseConfigBuilder<T> implements ModIdStage<T>, ClazzStage<T>, DefaultsStage<T>, OptionalStage<T>
     {
         private Builder() {}
@@ -100,6 +110,11 @@ public class SCJsonConfig<T> extends BaseShadowConfig<T> {
         public ModIdStage<T> defaults(T defaults) {
             setDefaults(defaults);
             return this;
+        }
+
+        @Override
+        protected ObjectMapper getDefaultMapper() {
+            return ShadowConfig.getDefaultJsonMapper();
         }
     }
 }

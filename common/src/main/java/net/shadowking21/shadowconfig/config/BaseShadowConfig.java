@@ -1,9 +1,12 @@
 package net.shadowking21.shadowconfig.config;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.shadowking21.shadowconfig.ShadowConfig;
+import net.shadowking21.shadowconfig.config.serialization.generators.CommentGenerator;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -76,7 +79,23 @@ public abstract class BaseShadowConfig<T> {
         configAllowThrow();
 
         try {
-            objectMapper.writeValue(FILE_PATH.toFile(), value);
+            if (isCommentsAllowed()) {
+                Writer writer = Files.newBufferedWriter(FILE_PATH);
+
+                JsonGenerator gen = objectMapper.getFactory().createGenerator(writer);
+                JsonGenerator commentingGen = new CommentGenerator(gen, value, getCommentPrefix());
+
+                commentingGen.assignCurrentValue(value);
+
+                // КРИТИЧЕСКИ ВАЖНО
+                objectMapper.writer().writeValue(commentingGen, value);
+
+                commentingGen.flush();
+                commentingGen.close();
+
+            }
+            else
+                objectMapper.writeValue(FILE_PATH.toFile(), value);
         }
         catch (IOException e) {
             throw new RuntimeException(e);
@@ -89,7 +108,16 @@ public abstract class BaseShadowConfig<T> {
         deleteConfigFile();
 
         try {
-            objectMapper.writeValue(FILE_PATH.toFile(), value);
+            if (isCommentsAllowed()) {
+                Writer writer = Files.newBufferedWriter(FILE_PATH);
+
+                var gen = objectMapper.getFactory().createGenerator(writer);
+                var commentingGen = new CommentGenerator(gen, value, getCommentPrefix());
+
+                objectMapper.writeValue(commentingGen, value);
+            }
+            else
+                objectMapper.writeValue(FILE_PATH.toFile(), value);
         }
         catch (IOException e) {
             throw new RuntimeException(e);
@@ -228,5 +256,7 @@ public abstract class BaseShadowConfig<T> {
         return modId + "-" + sideName + getExtension();
     }
 
+    public abstract boolean isCommentsAllowed();
+    public abstract String getCommentPrefix();
     protected abstract String getExtension();
 }

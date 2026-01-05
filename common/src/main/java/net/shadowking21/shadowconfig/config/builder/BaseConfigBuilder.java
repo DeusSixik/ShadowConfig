@@ -16,7 +16,7 @@ public abstract class BaseConfigBuilder<T>
     protected Class<T> clazz;
     protected T defaults;
     protected Path path = ShadowConfig.getDefaultConfigPath();
-    protected ObjectMapper mapper = ShadowConfig.getDefaultJsonMapper();
+    protected ObjectMapper mapper = getDefaultMapper();
     protected ConfigSide side = ConfigSide.COMMON;
 
     protected void setModId(String modId) {
@@ -42,6 +42,6 @@ public abstract class BaseConfigBuilder<T>
     protected void setDefaults(T defaults) {
         this.defaults = defaults;
     }
-
+    protected abstract ObjectMapper getDefaultMapper();
 }
 
