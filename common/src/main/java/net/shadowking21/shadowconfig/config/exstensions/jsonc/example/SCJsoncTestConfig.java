@@ -1,34 +1,36 @@
-package net.shadowking21.shadowconfig.config.json;
+package net.shadowking21.shadowconfig.config.exstensions.jsonc.example;
 
 import net.shadowking21.shadowconfig.ShadowConfig;
 import net.shadowking21.shadowconfig.config.ConfigSide;
+import net.shadowking21.shadowconfig.config.exstensions.jsonc.SCJsoncConfig;
+import net.shadowking21.shadowconfig.config.models.RandomConfig;
 
-public class SCJsonTestConfig {
+public class SCJsoncTestConfig {
 
-    public static SCJsonConfig<RandomConfig> commonRandomConfig;
+    public static SCJsoncConfig<RandomConfig> commonRandomConfig;
 
-    public static SCJsonConfig<RandomConfig> serverRandomConfig;
+    public static SCJsoncConfig<RandomConfig> serverRandomConfig;
 
-    public static SCJsonConfig<RandomConfig> clientRandomConfig;
+    public static SCJsoncConfig<RandomConfig> clientRandomConfig;
 
     public static void init() {
 
-        commonRandomConfig = (SCJsonConfig<RandomConfig>)
-                SCJsonConfig.Builder.builder(RandomConfig.class)
+        commonRandomConfig = (SCJsoncConfig<RandomConfig>)
+                SCJsoncConfig.Builder.builder(RandomConfig.class)
                         .defaults(new RandomConfig())
                         .modId(ShadowConfig.MOD_ID)
                         .side(ConfigSide.COMMON)
                         .build();
 
-        serverRandomConfig = (SCJsonConfig<RandomConfig>)
-                SCJsonConfig.Builder.builder(RandomConfig.class)
+        serverRandomConfig = (SCJsoncConfig<RandomConfig>)
+                SCJsoncConfig.Builder.builder(RandomConfig.class)
                         .defaults(new RandomConfig())
                         .modId(ShadowConfig.MOD_ID)
                         .side(ConfigSide.SERVER)
                         .build();
 
-        clientRandomConfig = (SCJsonConfig<RandomConfig>)
-                SCJsonConfig.Builder.builder(RandomConfig.class)
+        clientRandomConfig = (SCJsoncConfig<RandomConfig>)
+                SCJsoncConfig.Builder.builder(RandomConfig.class)
                         .defaults(new RandomConfig())
                         .modId(ShadowConfig.MOD_ID)
                         .side(ConfigSide.CLIENT)
@@ -38,5 +40,4 @@ public class SCJsonTestConfig {
         ShadowConfig.LOGGER.info(var);
         System.out.println(var);
     }
-
 }

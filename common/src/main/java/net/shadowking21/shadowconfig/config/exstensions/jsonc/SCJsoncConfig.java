@@ -1,4 +1,4 @@
-package net.shadowking21.shadowconfig.config.json;
+package net.shadowking21.shadowconfig.config.exstensions.jsonc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.shadowking21.shadowconfig.ShadowConfig;
@@ -12,23 +12,23 @@ import net.shadowking21.shadowconfig.config.builder.stages.OptionalStage;
 
 import java.nio.file.Path;
 
-public class SCJsonConfig<T> extends BaseShadowConfig<T> {
+public class SCJsoncConfig<T> extends BaseShadowConfig<T> {
 
-    public SCJsonConfig(String modId, Path path, T defaults, Class<T> clazz, ConfigSide configSide, ObjectMapper mapper) {
+    public SCJsoncConfig(String modId, Path path, T defaults, Class<T> clazz, ConfigSide configSide, ObjectMapper mapper) {
         super(modId, path, defaults, clazz, configSide, mapper);
     }
 
-    public SCJsonConfig(String modId, T defaults, Class<T> clazz, ConfigSide configSide, ObjectMapper mapper) {
+    public SCJsoncConfig(String modId, T defaults, Class<T> clazz, ConfigSide configSide, ObjectMapper mapper) {
         super(modId, defaults, clazz, configSide, mapper);
     }
 
-    public SCJsonConfig(String modId, T defaults, Class<T> clazz, ConfigSide configSide) {
+    public SCJsoncConfig(String modId, T defaults, Class<T> clazz, ConfigSide configSide) {
         super(modId, defaults, clazz, configSide, ShadowConfig.getDefaultJsonMapper());
     }
 
     @Override
     protected String getExtension() {
-        return ".json";
+        return ".jsonc";
     }
 
     public static class Builder<T> extends BaseConfigBuilder<T> implements ModIdStage<T>, ClazzStage<T>, DefaultsStage<T>, OptionalStage<T>
@@ -36,7 +36,7 @@ public class SCJsonConfig<T> extends BaseShadowConfig<T> {
         private Builder() {}
 
         public static <T> ModIdStage<T> builder(Class<T> clazz, T defaults) {
-            var builder = new Builder<T>();
+            var builder = new SCJsoncConfig.Builder<T>();
             builder.setDefaults(defaults);
             builder.setClass(clazz);
             return builder;
@@ -44,17 +44,17 @@ public class SCJsonConfig<T> extends BaseShadowConfig<T> {
 
         public static <T> DefaultsStage<T> builder(Class<T> clazz)
         {
-            var builder = new Builder<T>();
+            var builder = new SCJsoncConfig.Builder<T>();
             builder.setClass(clazz);
             return builder;
         }
 
         public static <T> ModIdStage<T> builder() {
-            return new Builder<T>();
+            return new SCJsoncConfig.Builder<T>();
         }
 
         public static <T> ModIdStage<T> builder(T defaults) {
-            var builder = new Builder<T>();
+            var builder = new SCJsoncConfig.Builder<T>();
             builder.setDefaults(defaults);
             return builder;
         }
@@ -91,7 +91,7 @@ public class SCJsonConfig<T> extends BaseShadowConfig<T> {
 
         @Override
         public BaseShadowConfig<T> build() {
-            var config = new SCJsonConfig<>(modId, path, defaults, clazz, side, mapper);
+            var config = new SCJsoncConfig<>(modId, path, defaults, clazz, side, mapper);
             config.init();
             return config;
         }

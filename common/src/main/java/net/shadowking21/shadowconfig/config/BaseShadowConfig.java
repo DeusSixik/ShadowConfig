@@ -4,11 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.shadowking21.shadowconfig.ShadowConfig;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.*;
+import java.util.stream.Collectors;
 
-public abstract class BaseShadowConfig<T> implements IConfigWriter<T>, IConfigReader<T> {
+public abstract class BaseShadowConfig<T> {
 
     protected final Path PATH;
 
@@ -41,26 +44,20 @@ public abstract class BaseShadowConfig<T> implements IConfigWriter<T>, IConfigRe
         FILE_PATH = Paths.get(path.toString(), getConfigName());
     }
 
-    public String getConfigName() {
-        String sideName = switch (configSide) {
-            case CLIENT -> "client";
-            case SERVER -> "server";
-            default -> "common";
-        };
-        return modId + "-" + sideName + getExtension();
-    }
-
     protected void init() {
         if (!isConfigAvailable())
             return;
 
+
         createPathsIfNotExists();
         if (!isExists())
             write(defaultConfig);
+        else
+            migrateIfNeed();
+
         currentConfig = read();
     }
 
-    @Override
     public T read()
     {
         configAllowThrow();
@@ -74,17 +71,109 @@ public abstract class BaseShadowConfig<T> implements IConfigWriter<T>, IConfigRe
         return value;
     }
 
-    @Override
     public void write(T value)
     {
         configAllowThrow();
 
         try {
-            objectMapper.writeValue(FILE_PATH.toFile(), defaultConfig);
+            objectMapper.writeValue(FILE_PATH.toFile(), value);
         }
         catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void rewrite(T value)
+    {
+        configAllowThrow();
+        deleteConfigFile();
+
+        try {
+            objectMapper.writeValue(FILE_PATH.toFile(), value);
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void rewriteDefault()
+    {
+        rewrite(defaultConfig);
+    }
+
+    public void deleteConfigFile()
+    {
+        configAllowThrow();
+
+        try {
+            Files.deleteIfExists(FILE_PATH);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void migrateIfNeed()
+    {
+        configAllowThrow(); // Side check
+
+        // If old config file does not have any fields of default config
+
+        Field[] fields = configClass.getFields();
+
+        // List of all fields for comparison from default class
+        List<String> newConfigFields = Arrays.stream(fields)
+                .map(Field::getName).toList();
+
+        try {
+            List<String> oldConfigFields = new ArrayList<>();
+
+            // Missing fields from file, which exists in default config (class) but not in a current file
+            // Used for gain default value in new config
+            List<String> missingFields = new ArrayList<>();
+
+            var tree = objectMapper.readTree(FILE_PATH.toFile());
+
+            for (Field field : fields) {
+                var name = field.getName();
+                if (!tree.has(name))
+                    continue;
+
+                var node = tree.get(name);
+                if (!node.isMissingNode()) {
+                    oldConfigFields.add(name);
+                }
+                else if (node.isMissingNode()) {
+                    missingFields.add(name);
+                }
+            }
+
+            String newConfigString = newConfigFields.stream().sorted().collect(Collectors.joining(";"));
+            String oldConfigString = oldConfigFields.stream().sorted().collect(Collectors.joining(";"));
+
+            // If all existing sorted fields not equals, we needed a migration
+            boolean isMigrationNeeded = !newConfigString.equals(oldConfigString);
+
+            if (!isMigrationNeeded)
+                return;
+
+            T cfg = objectMapper.readValue(FILE_PATH.toFile(), configClass);
+
+            for (Field f : configClass.getDeclaredFields()) {
+                f.setAccessible(true);
+
+                if (missingFields.contains(f.getName())) {
+                    Object defaultValue = f.get(defaultConfig);
+                    f.set(cfg, defaultValue);
+                }
+            }
+
+            rewrite(cfg);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public T getDefaultConfig()
@@ -97,19 +186,6 @@ public abstract class BaseShadowConfig<T> implements IConfigWriter<T>, IConfigRe
     {
         configAllowThrow();
         return currentConfig;
-    }
-
-    protected void createIfNotExists()
-    {
-        try {
-            if (!FILE_PATH.toFile().exists()) {
-                Files.createFile(FILE_PATH);
-            }
-        }
-        catch (IOException e)
-        {
-            ShadowConfig.LOGGER.config(e.getLocalizedMessage());
-        }
     }
 
     protected void createPathsIfNotExists()
@@ -141,6 +217,15 @@ public abstract class BaseShadowConfig<T> implements IConfigWriter<T>, IConfigRe
             return;
 
         throw new IllegalStateException("Attempt to access " + configSide + " config on the " + ShadowConfig.getCurrentGameSide() + " side");
+    }
+
+    public String getConfigName() {
+        String sideName = switch (configSide) {
+            case CLIENT -> "client";
+            case SERVER -> "server";
+            default -> "common";
+        };
+        return modId + "-" + sideName + getExtension();
     }
 
     protected abstract String getExtension();
