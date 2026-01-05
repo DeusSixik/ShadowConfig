@@ -87,7 +87,6 @@ public abstract class BaseShadowConfig<T> {
 
                 commentingGen.assignCurrentValue(value);
 
-                // КРИТИЧЕСКИ ВАЖНО
                 objectMapper.writer().writeValue(commentingGen, value);
 
                 commentingGen.flush();
