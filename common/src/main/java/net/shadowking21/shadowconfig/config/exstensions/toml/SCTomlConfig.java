@@ -44,8 +44,16 @@ public class SCTomlConfig<T> extends BaseShadowConfig<T> {
     {
         private Builder() {}
 
+        public static <T> OptionalStage<T> builder(Class<T> clazz, T defaults, String modId) {
+            var builder = new Builder<T>();
+            builder.setDefaults(defaults);
+            builder.setClass(clazz);
+            builder.setModId(modId);
+            return builder;
+        }
+
         public static <T> ModIdStage<T> builder(Class<T> clazz, T defaults) {
-            var builder = new SCTomlConfig.Builder<T>();
+            var builder = new Builder<T>();
             builder.setDefaults(defaults);
             builder.setClass(clazz);
             return builder;
@@ -53,19 +61,13 @@ public class SCTomlConfig<T> extends BaseShadowConfig<T> {
 
         public static <T> DefaultsStage<T> builder(Class<T> clazz)
         {
-            var builder = new SCTomlConfig.Builder<T>();
+            var builder = new Builder<T>();
             builder.setClass(clazz);
             return builder;
         }
 
-        public static <T> ModIdStage<T> builder() {
-            return new SCTomlConfig.Builder<T>();
-        }
-
-        public static <T> ModIdStage<T> builder(T defaults) {
-            var builder = new SCTomlConfig.Builder<T>();
-            builder.setDefaults(defaults);
-            return builder;
+        public static <T> ClazzStage<T> builder() {
+            return new Builder<>();
         }
 
         @Override

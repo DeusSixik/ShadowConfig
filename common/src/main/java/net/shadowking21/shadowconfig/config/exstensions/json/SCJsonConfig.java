@@ -9,6 +9,7 @@ import net.shadowking21.shadowconfig.config.builder.stages.ClazzStage;
 import net.shadowking21.shadowconfig.config.builder.stages.DefaultsStage;
 import net.shadowking21.shadowconfig.config.builder.stages.ModIdStage;
 import net.shadowking21.shadowconfig.config.builder.stages.OptionalStage;
+import net.shadowking21.shadowconfig.config.exstensions.yaml.SCYamlConfig;
 
 import java.nio.file.Path;
 
@@ -45,6 +46,14 @@ public class SCJsonConfig<T> extends BaseShadowConfig<T> {
     {
         private Builder() {}
 
+        public static <T> OptionalStage<T> builder(Class<T> clazz, T defaults, String modId) {
+            var builder = new Builder<T>();
+            builder.setDefaults(defaults);
+            builder.setClass(clazz);
+            builder.setModId(modId);
+            return builder;
+        }
+
         public static <T> ModIdStage<T> builder(Class<T> clazz, T defaults) {
             var builder = new Builder<T>();
             builder.setDefaults(defaults);
@@ -59,14 +68,8 @@ public class SCJsonConfig<T> extends BaseShadowConfig<T> {
             return builder;
         }
 
-        public static <T> ModIdStage<T> builder() {
-            return new Builder<T>();
-        }
-
-        public static <T> ModIdStage<T> builder(T defaults) {
-            var builder = new Builder<T>();
-            builder.setDefaults(defaults);
-            return builder;
+        public static <T> OptionalStage<T> builder() {
+            return new Builder<>();
         }
 
         @Override

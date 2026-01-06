@@ -9,6 +9,7 @@ import net.shadowking21.shadowconfig.config.builder.stages.ClazzStage;
 import net.shadowking21.shadowconfig.config.builder.stages.DefaultsStage;
 import net.shadowking21.shadowconfig.config.builder.stages.ModIdStage;
 import net.shadowking21.shadowconfig.config.builder.stages.OptionalStage;
+import net.shadowking21.shadowconfig.config.exstensions.jsonc.SCJsoncConfig;
 import net.shadowking21.shadowconfig.utils.YamlSerializer;
 
 import java.io.IOException;
@@ -75,8 +76,16 @@ public class SCYamlConfig<T> extends BaseShadowConfig<T> {
     {
         private Builder() {}
 
+        public static <T> OptionalStage<T> builder(Class<T> clazz, T defaults, String modId) {
+            var builder = new Builder<T>();
+            builder.setDefaults(defaults);
+            builder.setClass(clazz);
+            builder.setModId(modId);
+            return builder;
+        }
+
         public static <T> ModIdStage<T> builder(Class<T> clazz, T defaults) {
-            var builder = new SCYamlConfig.Builder<T>();
+            var builder = new Builder<T>();
             builder.setDefaults(defaults);
             builder.setClass(clazz);
             return builder;
@@ -84,19 +93,13 @@ public class SCYamlConfig<T> extends BaseShadowConfig<T> {
 
         public static <T> DefaultsStage<T> builder(Class<T> clazz)
         {
-            var builder = new SCYamlConfig.Builder<T>();
+            var builder = new Builder<T>();
             builder.setClass(clazz);
             return builder;
         }
 
-        public static <T> ModIdStage<T> builder() {
-            return new SCYamlConfig.Builder<T>();
-        }
-
-        public static <T> ModIdStage<T> builder(T defaults) {
-            var builder = new SCYamlConfig.Builder<T>();
-            builder.setDefaults(defaults);
-            return builder;
+        public static <T> ClazzStage<T> builder() {
+            return new Builder<>();
         }
 
         @Override
