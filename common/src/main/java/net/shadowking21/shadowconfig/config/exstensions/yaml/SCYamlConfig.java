@@ -1,10 +1,7 @@
 package net.shadowking21.shadowconfig.config.exstensions.yaml;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import net.shadowking21.shadowconfig.ShadowConfig;
-import net.shadowking21.shadowconfig.annotation.ConfigComment;
 import net.shadowking21.shadowconfig.config.BaseShadowConfig;
 import net.shadowking21.shadowconfig.config.ConfigSide;
 import net.shadowking21.shadowconfig.config.builder.BaseConfigBuilder;
@@ -12,21 +9,15 @@ import net.shadowking21.shadowconfig.config.builder.stages.ClazzStage;
 import net.shadowking21.shadowconfig.config.builder.stages.DefaultsStage;
 import net.shadowking21.shadowconfig.config.builder.stages.ModIdStage;
 import net.shadowking21.shadowconfig.config.builder.stages.OptionalStage;
-import net.shadowking21.shadowconfig.utils.YamlHandler;
-import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.nodes.*;
+import net.shadowking21.shadowconfig.utils.YamlSerializer;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class SCYamlConfig<T> extends BaseShadowConfig<T> {
+
     public SCYamlConfig(String modId, Path path, T defaults, Class<T> clazz, ConfigSide configSide, ObjectMapper mapper) {
         super(modId, path, defaults, clazz, configSide, mapper);
     }
@@ -73,10 +64,11 @@ public class SCYamlConfig<T> extends BaseShadowConfig<T> {
     }
 
     private void writeYamlWithComments(Object bean, Writer writer) {
-        Map<String, Object> map = objectMapper.convertValue(bean, Map.class);
-        Node root = YamlHandler.buildYamlNode(map, bean.getClass());
-        Yaml yaml = new Yaml();
-        yaml.serialize(root, writer);
+        try {
+            YamlSerializer.writeYaml(bean, writer);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static class Builder<T> extends BaseConfigBuilder<T> implements ModIdStage<T>, ClazzStage<T>, DefaultsStage<T>, OptionalStage<T>

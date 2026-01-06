@@ -91,7 +91,6 @@ public abstract class BaseShadowConfig<T> {
 
                 commentingGen.flush();
                 commentingGen.close();
-
             }
             else
                 objectMapper.writeValue(FILE_PATH.toFile(), value);
@@ -123,7 +122,7 @@ public abstract class BaseShadowConfig<T> {
         }
     }
 
-    public void rewriteDefault()
+    public void rewriteToDefault()
     {
         rewrite(defaultConfig);
     }

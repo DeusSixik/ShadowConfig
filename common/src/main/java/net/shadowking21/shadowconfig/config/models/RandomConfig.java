@@ -23,5 +23,8 @@ public class RandomConfig
 
     public boolean falseValue = false;
 
+    @ConfigComment("Finally it ready to release!")
+    public String additionalValue = "HAHAHA I DO IT!";
+
     public RandomConfig() {}
 }
