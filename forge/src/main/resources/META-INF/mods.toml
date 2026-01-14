@@ -9,9 +9,9 @@ version = "${version}"
 displayName = "Shadow Config"
 authors = "ShadowKing21"
 description = '''
-
+Extensible configuration library for mods, designed to simplify config management with many functions and multiple file extensions
 '''
-#logoFile = ""
+logoFile = "assets/shadowconfig/icon.png"
 
 [[dependencies.shadowconfig]]
 modId = "forge"

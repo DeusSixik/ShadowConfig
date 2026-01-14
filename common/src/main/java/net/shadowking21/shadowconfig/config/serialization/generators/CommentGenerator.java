@@ -11,8 +11,11 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 
 public class CommentGenerator extends JsonGeneratorDelegate {
+
     private final Object bean;
+
     private final String commentPrefix;
+
     private boolean isFirstField = true;
 
     public CommentGenerator(JsonGenerator d, Object bean, String commentPrefix) {

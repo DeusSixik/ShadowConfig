@@ -32,7 +32,7 @@ public class YamlSerializer {
         String[] lines = yaml.split("\n");
         for (String line : lines) {
             String trimmed = line.trim();
-            // ищем строки вида "key:"
+
             String[] valuesKeyArray = trimmed.split(":", 2);
             String key = valuesKeyArray[0];
             String comment = extractComment(beanClass, key);

@@ -2,7 +2,6 @@ package net.shadowking21.shadowconfig.forge;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.shadowking21.shadowconfig.ShadowConfig;
 import dev.architectury.platform.forge.EventBuses;
@@ -12,6 +11,7 @@ import net.shadowking21.shadowconfig.config.ConfigSide;
 
 @Mod(ShadowConfig.MOD_ID)
 public final class ShadowConfigForge {
+
     public ShadowConfigForge() {
         // Submit our event bus to let Architectury API register our content on the right time.
         EventBuses.registerModEventBus(ShadowConfig.MOD_ID, FMLJavaModLoadingContext.get().getModEventBus());
@@ -24,4 +24,5 @@ public final class ShadowConfigForge {
     {
         return FMLEnvironment.dist == Dist.CLIENT;
     }
+
 }
