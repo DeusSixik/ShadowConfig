@@ -13,16 +13,6 @@ import net.shadowking21.shadowconfig.config.ConfigSide;
 public final class ShadowConfigForge {
 
     public ShadowConfigForge() {
-        // Submit our event bus to let Architectury API register our content on the right time.
         EventBuses.registerModEventBus(ShadowConfig.MOD_ID, FMLJavaModLoadingContext.get().getModEventBus());
-
-        // Run our common setup.
-        ShadowConfig.init(FMLPaths.CONFIGDIR.get(), isClient() ? ConfigSide.CLIENT : ConfigSide.SERVER );
     }
-
-    public static boolean isClient()
-    {
-        return FMLEnvironment.dist == Dist.CLIENT;
-    }
-
 }

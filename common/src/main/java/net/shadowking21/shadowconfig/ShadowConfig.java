@@ -7,11 +7,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.toml.TomlFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import dev.architectury.platform.Platform;
+import dev.architectury.utils.Env;
 import net.shadowking21.shadowconfig.config.ConfigSide;
 import net.shadowking21.shadowconfig.config.exstensions.json.example.SCJsonTestConfig;
-import net.shadowking21.shadowconfig.config.exstensions.jsonc.example.SCJsoncTestConfig;
-import net.shadowking21.shadowconfig.config.exstensions.toml.example.SCTomlTestConfig;
-import net.shadowking21.shadowconfig.config.exstensions.yaml.example.SCYamlTestConfig;
 
 import java.nio.file.Path;
 import java.util.logging.Logger;
@@ -22,13 +21,11 @@ public final class ShadowConfig {
 
     public static final Logger LOGGER = Logger.getLogger("ShadowConfig");
 
-    private static Path GAME_DIR;
+    private static final Path GAME_DIR = Platform.getConfigFolder();
 
-    private static ConfigSide currentSide;
+    private static final ConfigSide currentSide = Platform.getEnvironment() == Env.SERVER ? ConfigSide.SERVER : ConfigSide.CLIENT;
 
-    public static void init(Path path, ConfigSide side) {
-        GAME_DIR = path;
-        currentSide = side;
+    public static void init() {
         //SCJsonTestConfig.init();
         //SCJsoncTestConfig.init();
         //SCTomlTestConfig.init();

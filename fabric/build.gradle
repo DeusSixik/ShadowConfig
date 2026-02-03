@@ -44,6 +44,10 @@ dependencies {
     minecraftRuntimeLibraries ("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.19.4")
     minecraftRuntimeLibraries ("com.fasterxml.jackson.dataformat:jackson-dataformat-toml:2.19.4")
 
+    modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:12.0.684"
+    modRuntimeOnly "me.shedaniel.cloth:cloth-config-fabric:11.1.106"
+    modRuntimeOnly "me.shedaniel.cloth:basic-math:0.6.1"
+
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
 }
