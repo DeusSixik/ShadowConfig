@@ -1,0 +1,47 @@
+name: Release Mod
+
+on:
+  push:
+    tags:
+      - "v*" # Срабатывает только если тег начинается с 'v' (например, v1.0.0)
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/actions/wrapper-validation@v3
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          cache-read-only: false # Ускоряет повторные сборки
+
+      - name: Build with Gradle
+        # Запускаем сборку. Architectury соберет и Fabric, и Forge версии
+        run: ./gradlew build --no-daemon
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          # Паттерн ищет jar файлы в папках fabric и forge, игнорируя dev и sources,
+          # если они не нужны (но обычно для релизов GitHub просто заливают всё из libs).
+          # Если хочешь исключить dev/sources, паттерн придется усложнить.
+          files: |
+            fabric/build/libs/*.jar
+            forge/build/libs/*.jar
+          generate_release_notes: true # Авто-генерация чейнджлога на основе коммитов
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
