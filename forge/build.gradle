@@ -94,6 +94,9 @@ shadowJar {
     exclude "META-INF/scripts/**"
 
     relocate 'com.fasterxml.jackson', 'net.shadowking21.shadowconfig.shadowlib.jackson'
+
+    relocate 'com.fasterxml.jackson.dataformat.yaml', 'net.shadowking21.shadowconfig.shadowlib.jackson.dataformat.yaml'
+    relocate 'org.yaml.snakeyaml',                    'net.shadowking21.shadowconfig.shadowlib.snakeyaml'
 }
 
 remapJar {
