@@ -22,10 +22,13 @@ public final class ShadowConfig {
     private static SCPlatformHook CurrentPlatform;
 
     private static void init() {
-        SCJsonTestConfig.init();
-        //SCJsoncTestConfig.init();
-        //SCTomlTestConfig.init();
-        //SCYamlTestConfig.init();
+
+        if(CurrentPlatform.isDeveloper()) {
+            SCJsonTestConfig.init();
+            //SCJsoncTestConfig.init();
+            //SCTomlTestConfig.init();
+            //SCYamlTestConfig.init();
+        }
     }
 
     public static Path getDefaultConfigPath() {
