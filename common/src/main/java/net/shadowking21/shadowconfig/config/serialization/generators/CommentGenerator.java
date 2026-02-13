@@ -3,7 +3,6 @@ package net.shadowking21.shadowconfig.config.serialization.generators;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.SerializableString;
 import com.fasterxml.jackson.core.util.JsonGeneratorDelegate;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import net.shadowking21.shadowconfig.annotation.ConfigComment;
 

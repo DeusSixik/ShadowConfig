@@ -7,8 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.toml.TomlFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import dev.architectury.platform.Platform;
-import dev.architectury.utils.Env;
 import net.shadowking21.shadowconfig.config.ConfigSide;
 import net.shadowking21.shadowconfig.config.exstensions.json.example.SCJsonTestConfig;
 
@@ -21,19 +19,20 @@ public final class ShadowConfig {
 
     public static final Logger LOGGER = Logger.getLogger("ShadowConfig");
 
-    private static final Path GAME_DIR = Platform.getConfigFolder();
+    private static SCPlatformHook CurrentPlatform;
 
-    private static final ConfigSide currentSide = Platform.getEnvironment() == Env.SERVER ? ConfigSide.SERVER : ConfigSide.CLIENT;
+    private static void init() {
 
-    public static void init() {
-        //SCJsonTestConfig.init();
-        //SCJsoncTestConfig.init();
-        //SCTomlTestConfig.init();
-        //SCYamlTestConfig.init();
+        if(CurrentPlatform.isDeveloper()) {
+            SCJsonTestConfig.init();
+            //SCJsoncTestConfig.init();
+            //SCTomlTestConfig.init();
+            //SCYamlTestConfig.init();
+        }
     }
 
     public static Path getDefaultConfigPath() {
-        return GAME_DIR;
+        return CurrentPlatform.getConfigPath();
     }
 
     public static ObjectMapper getDefaultJsonMapper() {
@@ -60,7 +59,12 @@ public final class ShadowConfig {
     }
 
     public static ConfigSide getCurrentGameSide() {
-        return currentSide;
+        return CurrentPlatform.getCurrentSide();
     }
 
+    public static void initPlatform(SCPlatformHook platformHook) {
+        if(CurrentPlatform != null) return;
+        CurrentPlatform = platformHook;
+        init();
+    }
 }
