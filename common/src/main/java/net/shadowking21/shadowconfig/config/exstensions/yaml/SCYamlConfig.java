@@ -9,7 +9,6 @@ import net.shadowking21.shadowconfig.config.builder.stages.ClazzStage;
 import net.shadowking21.shadowconfig.config.builder.stages.DefaultsStage;
 import net.shadowking21.shadowconfig.config.builder.stages.ModIdStage;
 import net.shadowking21.shadowconfig.config.builder.stages.OptionalStage;
-import net.shadowking21.shadowconfig.config.exstensions.jsonc.SCJsoncConfig;
 import net.shadowking21.shadowconfig.utils.YamlSerializer;
 
 import java.io.IOException;

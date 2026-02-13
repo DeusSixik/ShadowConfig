@@ -3,10 +3,6 @@ package net.shadowking21.shadowconfig.config.builder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.shadowking21.shadowconfig.ShadowConfig;
 import net.shadowking21.shadowconfig.config.ConfigSide;
-import net.shadowking21.shadowconfig.config.builder.stages.ClazzStage;
-import net.shadowking21.shadowconfig.config.builder.stages.DefaultsStage;
-import net.shadowking21.shadowconfig.config.builder.stages.ModIdStage;
-import net.shadowking21.shadowconfig.config.builder.stages.OptionalStage;
 
 import java.nio.file.Path;
 

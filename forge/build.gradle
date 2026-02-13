@@ -34,7 +34,7 @@ configurations {
 dependencies {
     forge "net.minecraftforge:forge:$rootProject.forge_version"
 
-    modImplementation "dev.architectury:architectury-forge:$rootProject.architectury_api_version"
+//    modImplementation "dev.architectury:architectury-forge:$rootProject.architectury_api_version"
 
     shadowCommon ("com.fasterxml.jackson.core:jackson-core:2.19.4")
     shadowCommon ("com.fasterxml.jackson.core:jackson-databind:2.19.4")
