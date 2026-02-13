@@ -3,7 +3,7 @@ name: Release Mod
 on:
   push:
     tags:
-      - "v*" # Срабатывает только если тег начинается с 'v' (например, v1.0.0)
+      - "v*"
 
 jobs:
   build-and-deploy:
@@ -25,22 +25,22 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
         with:
-          cache-read-only: false # Ускоряет повторные сборки
+          cache-read-only: false
+
+      # --- ИСПРАВЛЕНИЕ: Даем права на выполнение ---
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
       - name: Build with Gradle
-        # Запускаем сборку. Architectury соберет и Fabric, и Forge версии
         run: ./gradlew build --no-daemon
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          # Паттерн ищет jar файлы в папках fabric и forge, игнорируя dev и sources,
-          # если они не нужны (но обычно для релизов GitHub просто заливают всё из libs).
-          # Если хочешь исключить dev/sources, паттерн придется усложнить.
           files: |
             fabric/build/libs/*.jar
             forge/build/libs/*.jar
-          generate_release_notes: true # Авто-генерация чейнджлога на основе коммитов
+          generate_release_notes: true
           draft: false
           prerelease: false
         env:
