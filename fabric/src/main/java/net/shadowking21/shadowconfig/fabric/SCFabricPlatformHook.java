@@ -18,4 +18,9 @@ final class SCFabricPlatformHook implements SCPlatformHook {
     public Path getConfigPath() {
         return FabricLoader.getInstance().getConfigDir();
     }
+
+    @Override
+    public boolean isDeveloper() {
+        return FabricLoader.getInstance().isDevelopmentEnvironment();
+    }
 }

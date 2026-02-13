@@ -17,4 +17,9 @@ final class SCForgePlatformHook implements SCPlatformHook {
     public Path getConfigPath() {
         return FMLPaths.CONFIGDIR.get();
     }
+
+    @Override
+    public boolean isDeveloper() {
+        return !FMLEnvironment.production;
+    }
 }

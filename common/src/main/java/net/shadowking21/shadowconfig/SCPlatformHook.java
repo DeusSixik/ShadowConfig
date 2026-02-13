@@ -9,4 +9,6 @@ public interface SCPlatformHook {
     ConfigSide getCurrentSide();
 
     Path getConfigPath();
+
+    boolean isDeveloper();
 }
