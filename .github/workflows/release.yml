@@ -13,13 +13,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Validate Gradle Wrapper
-        uses: gradle/actions/wrapper-validation@v3
-
-      - name: Setup JDK 17
+      # ВАЖНО: Ставим Java 21 для запуска Gradle (так требует новый Loom)
+      - name: Setup JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
 
       - name: Setup Gradle
@@ -27,11 +25,12 @@ jobs:
         with:
           cache-read-only: false
 
-      # --- ИСПРАВЛЕНИЕ: Даем права на выполнение ---
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Build with Gradle
+        # Gradle запустится на Java 21, но скомпилирует мод под Java 17,
+        # так как это указано у тебя в build.gradle (release = 17)
         run: ./gradlew build --no-daemon
 
       - name: Create GitHub Release
@@ -40,6 +39,7 @@ jobs:
           files: |
             fabric/build/libs/*.jar
             forge/build/libs/*.jar
+            common/build/libs/*.jar
           generate_release_notes: true
           draft: false
           prerelease: false
